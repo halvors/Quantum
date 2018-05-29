@@ -91,20 +91,20 @@ public class TileQuantumAssembler extends TileInventoryMachine {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public boolean canProcess() {
-        final ItemStack itemStack = getStackInSlot(6);
+        final ItemStack itemStack = getStackInSlot(6);	// template and result
 
         if (itemStack != null) {
-            if (QuantumAssemblerRecipes.hasRecipe(itemStack)) {
+            if (QuantumAssemblerRecipes.hasRecipe(itemStack)) {	// if cloning enabled
                 for (int i = 0; i <= 5; i++) {
                     final ItemStack itemStackInSlot = getStackInSlot(i);
 
                     if (!OreDictionaryHelper.isDarkmatterCell(itemStackInSlot)) {
-                        return false;
+                        return false;							// slots 0-5 must contains dark matter cells
                     }
                 }
             }
-
-            return itemStack.stackSize < 64;
+            else return false;	// item not in recipes
+            return itemStack.stackSize < 64;	// and target slot must have free space (if template have an NBT, cannot copy it)
         }
 
         return false;
@@ -117,14 +117,16 @@ public class TileQuantumAssembler extends TileInventoryMachine {
                 ItemStack itemStack = getStackInSlot(slot);
 
                 if (itemStack != null) {
+                	NuclearPhysics.getLogger().warn("*** TileQuantum: slot " + slot + " decreasing...");
                     decrStackSize(slot, 1);
                 }
             }
 
-            final ItemStack itemStack = getStackInSlot(6);
+            final ItemStack resultStack = getStackInSlot(6);
 
-            if (itemStack != null) {
-                itemStack.stackSize++;
+            if (resultStack != null) {
+                resultStack.stackSize++;
+                markDirty();					// repaint
             }
         }
     }
