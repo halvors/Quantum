@@ -79,7 +79,7 @@ public class ConfigurationManager {
         //General.allowAlternateRecipes = configuration.get(Configuration.CATEGORY_GENERAL, "allowAlternateRecipes", true).getBoolean();
         //General.allowIC2UraniumCompression = configuration.get(Configuration.CATEGORY_GENERAL, "allowIC2UraniumCompression", true).getBoolean();
         General.allowGeneratedQuantumAssemblerRecipes = configuration.get(Configuration.CATEGORY_GENERAL, "allowGeneratedQuantumAssemblerRecipes", true).getBoolean();
-	    General.restrictedQuantumAssemblerIds = configuration.get(Configuration.CATEGORY_GENERAL, "restrictedQuantumAssemblerIds", true).getIntList();
+	    General.restrictedQuantumAssemblerIds = configuration.get(Configuration.CATEGORY_GENERAL, "restrictedQuantumAssemblerIds", new int[]{}).getIntList();
 
 	    configuration.save();
     }
