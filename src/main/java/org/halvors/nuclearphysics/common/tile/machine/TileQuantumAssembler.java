@@ -1,8 +1,10 @@
 package org.halvors.nuclearphysics.common.tile.machine;
 
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.halvors.nuclearphysics.api.recipe.QuantumAssemblerRecipes;
+import org.halvors.nuclearphysics.common.ConfigurationManager;
 import org.halvors.nuclearphysics.common.NuclearPhysics;
 import org.halvors.nuclearphysics.common.block.machine.BlockMachine.EnumMachine;
 import org.halvors.nuclearphysics.common.capabilities.energy.EnergyStorage;
@@ -104,10 +106,18 @@ public class TileQuantumAssembler extends TileInventoryMachine {
 	}
 
 	public boolean isRestricted(ItemStack itemStack) {
-		return itemStack == null
-			       || itemStack.isStackable()
-			       || !QuantumAssemblerRecipes.hasRecipe(itemStack)
-			       || this.getBlockType().getUnlocalizedName().equals(itemStack.getItem().getUnlocalizedName());
+		if (itemStack == null
+			    || itemStack.isStackable()
+			    || !QuantumAssemblerRecipes.hasRecipe(itemStack)
+			    || this.getBlockType().getUnlocalizedName().equals(itemStack.getItem().getUnlocalizedName())) {
+			return true;
+		}
+		for (int id : ConfigurationManager.General.restrictedQuantumAssemblerIds) {
+			if (id == Item.itemRegistry.getIDForObject(itemStack)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	// Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack.
