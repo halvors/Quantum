@@ -144,7 +144,7 @@ public class TileElectricTurbine extends TileGenerator implements IMultiBlockStr
         }
 
         if (!worldObj.isRemote) {
-            if (worldObj.getTotalWorldTime() % 60 == 0 && getMultiBlock().isConstructed()) {
+            if (worldObj.getTotalWorldTime() % 20 == 0 && getMultiBlock().isConstructed()) {
                 NuclearPhysics.getPacketHandler().sendToReceivers(new PacketTileEntity(this), this);
             }
 
@@ -191,7 +191,7 @@ public class TileElectricTurbine extends TileGenerator implements IMultiBlockStr
 
     @Override
     public BlockPos getPosition() {
-        return pos;
+        return this.getPos();
     }
 
     @Override

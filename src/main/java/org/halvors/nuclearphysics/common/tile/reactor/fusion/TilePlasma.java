@@ -40,7 +40,7 @@ public class TilePlasma extends TileBase {
     @Override
     public void updateEntity() {
         if (!worldObj.isRemote) {
-            ThermalGrid.addTemperature(worldObj, pos, (temperature - ThermalGrid.getTemperature(worldObj, pos)) * 0.1);
+            ThermalGrid.addTemperature(worldObj, this.getPos(), (temperature - ThermalGrid.getTemperature(worldObj, this.getPos())) * 0.1);
 
             if (worldObj.getWorldTime() % 20 == 0) {
                 temperature /= 1.5;
@@ -52,7 +52,7 @@ public class TilePlasma extends TileBase {
                     for (final ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
                         // Randomize spread direction.
                         if (worldObj.rand.nextFloat() < 0.4) {
-                            final BlockPos spreadPos = pos.offset(side);
+                            final BlockPos spreadPos = this.getPos().offset(side);
                             TileEntity tile = spreadPos.getTileEntity(worldObj);
 
                             if (!(tile instanceof TilePlasma)) {

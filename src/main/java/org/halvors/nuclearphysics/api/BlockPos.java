@@ -226,4 +226,19 @@ public class BlockPos {
     public BlockPos offset(final ForgeDirection facing, final int n) {
         return n == 0 ? this : new BlockPos(this.x + facing.offsetX * n, this.y + facing.offsetY * n, this.z + facing.offsetZ * n);
     }
+
+	@Override
+	public String toString() {
+		return "(" + x +", " + y + ", " + z + ")";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof BlockPos) {
+			BlockPos pos = (BlockPos)obj;
+			return x == pos.x && y == pos.y && z == pos.z;
+		}
+		return false;
+	}
+
 }

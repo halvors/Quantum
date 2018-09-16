@@ -106,7 +106,7 @@ public class TileGenerator extends TileBase implements ITileNetwork, IEnergyProv
         targets.clear();
 
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-            final BlockPos neighborPos = pos.offset(side);
+            final BlockPos neighborPos = this.getPos().offset(side);
 
             if (isValidTarget(neighborPos, side)) {
                 targets.add(neighborPos);
