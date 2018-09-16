@@ -87,11 +87,14 @@ public class ThermalGrid implements IGrid {
         }
     }
 
+    @Override
     public boolean canUpdate() {
         return !NuclearPhysics.getProxy().isPaused();
     }
 
+	@Override
     public boolean continueUpdate() {
         return true;
     }
+
 }
