@@ -58,7 +58,7 @@ public class TileThermometer extends TileRotatable {
             if (trackCoordinate != null) {
                 detectedTemperature = ThermalGrid.getTemperature(worldObj, trackCoordinate);
             } else {
-                detectedTemperature = ThermalGrid.getTemperature(worldObj, pos);
+                detectedTemperature = ThermalGrid.getTemperature(worldObj, this.getPos());
             }
 
             // Send update packet if temperature is different or over temperature threshold.

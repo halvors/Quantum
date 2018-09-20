@@ -109,15 +109,15 @@ public class TileReactorCell extends TileInventory implements IFluidHandler, IRe
 
                 if (drain != null && drain.amount >= FluidContainerRegistry.BUCKET_VOLUME) {
                     final ForgeDirection spawnDir = ForgeDirection.getOrientation(worldObj.rand.nextInt(4) + 2);
-                    final BlockPos spawnPos = pos.offset(spawnDir, 2);
+                    final BlockPos spawnPos = this.getPos().offset(spawnDir, 2);
 
-                    if (pos.isAirBlock(worldObj)) {
+                    if (this.getPos().isAirBlock(worldObj)) {
                         final PlasmaSpawnEvent event = new PlasmaSpawnEvent(worldObj, spawnPos, TilePlasma.PLASMA_MAX_TEMPERATURE);
                         MinecraftForge.EVENT_BUS.post(event);
 
                         // Spawn plasma.
                         if (!event.isCanceled()) {
-                            pos.setBlock(ModFluids.plasma.getBlock(), 0, 2, worldObj);
+	                        this.getPos().setBlock(ModFluids.plasma.getBlock(), 0, 2, worldObj);
                             tank.drain(FluidContainerRegistry.BUCKET_VOLUME, true);
                         }
                     } else {
@@ -151,17 +151,19 @@ public class TileReactorCell extends TileInventory implements IFluidHandler, IRe
                     }
 
                     // Emit radiation.
-                    if (worldObj.getTotalWorldTime() % 20 == 0 && worldObj.rand.nextFloat() > 0.65) {
+                    if (worldObj.getTotalWorldTime() % 40 == 0) {
                         final List<EntityLiving> entities = worldObj.getEntitiesWithinAABB(EntityLiving.class, AxisAlignedBB.getBoundingBox(xCoord - RADIUS * 2, yCoord - RADIUS * 2, zCoord - RADIUS * 2, xCoord + RADIUS * 2, yCoord + RADIUS * 2, zCoord + RADIUS * 2));
 
                         for (EntityLiving entity : entities) {
-                            ModPotions.poisonRadiation.poisonEntity(entity);
+                        	if(worldObj.rand.nextFloat() < (1F / Math.abs(entity.getDistance(xCoord, yCoord, zCoord)))) {
+		                        ModPotions.poisonRadiation.poisonEntity(entity);
+	                        }
                         }
                     }
                 }
 
                 // Update the temperature from the thermal grid.
-                temperature = ThermalGrid.getTemperature(worldObj, pos);
+                temperature = ThermalGrid.getTemperature(worldObj, this.getPos());
 
                 // Only a small percentage of the internal energy is used for temperature.
                 if ((internalEnergy - previousInternalEnergy) > 0) {
@@ -169,7 +171,7 @@ public class TileReactorCell extends TileInventory implements IFluidHandler, IRe
 
                     // Check control rods.
                     for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-                        final BlockPos checkPos = pos.offset(side);
+                        final BlockPos checkPos = this.getPos().offset(side);
 
                         if (checkPos.getBlock(worldObj) == ModBlocks.blockControlRod) {
                             deltaTemperature /= 2;
@@ -177,7 +179,7 @@ public class TileReactorCell extends TileInventory implements IFluidHandler, IRe
                     }
 
                     // Add heat to surrounding blocks in the thermal grid.
-                    ThermalGrid.addTemperature(worldObj, pos, deltaTemperature);
+                    ThermalGrid.addTemperature(worldObj, this.getPos(), deltaTemperature);
 
                     if (previousTemperature != temperature && !shouldUpdate) {
                         shouldUpdate = true;
@@ -207,7 +209,7 @@ public class TileReactorCell extends TileInventory implements IFluidHandler, IRe
 
                 if (isOverToxic()) {
                     // Randomly leak toxic waste when it is too toxic.
-                    final BlockPos leakPos = pos.add(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10);
+                    final BlockPos leakPos = this.getPos().add(worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10, worldObj.rand.nextInt(20) - 10);
                     final Block block = leakPos.getBlock(worldObj);
 
                     if (block == Blocks.grass) {
@@ -344,7 +346,7 @@ public class TileReactorCell extends TileInventory implements IFluidHandler, IRe
         worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 
         // Create the explosion.
-        final ReactorExplosion explosion = new ReactorExplosion(worldObj, null, pos, 9);
+        final ReactorExplosion explosion = new ReactorExplosion(worldObj, null, this.getPos(), 9);
         explosion.explode();
     }
 }
